@@ -61,20 +61,28 @@ namespace CAImageSegmentation
                     float stateTransition = GetStateTransition(p_state, q_state);
                     if (stateTransition > Threshold)
                     {
+                        //if (stateTransition < 1)
+                        //    Console.Write("hi");
+
                         // neighbour q wins so update central point p
 
-                        int new_labelidx_p = q_state.LabelIdx;
+                        //int new_labelidx_p = q_state.LabelIdx;
                         float new_strength_p = stateTransition;
 
                         if (p_state.LabelIdx != 0)
                         {
+                            for (int i=0; i<labels.Count; i++)
+                            {
+                                if (labels[i] == p_state.LabelIdx)
+                                    labels[i] = q_state.LabelIdx;
+                            }
                             // update the label for all other cells with the same label.
-                            labels[p_state.LabelIdx] = new_labelidx_p;
+                            labels[p_state.LabelIdx] = q_state.LabelIdx;
                         }
 
                         // set new state for p
                         p_state.Strength = new_strength_p;
-                        p_state.LabelIdx = new_labelidx_p;
+                        p_state.LabelIdx = q_state.LabelIdx;
                         //SetState(p, p_state);
 
                         numStateTransitions++;

@@ -19,9 +19,9 @@ namespace CAImageSegmentation
             String outPath = inputFolder + "output_file.png";
             bool saveAsGrayScale = config.Bool("save_input_as_grayscale", false);
             float threshold = config.Float("threshold", 0.8f);
-            int numTrainings = config.Int("num_trainings", 700);
+            int numTrainings = config.Int("num_trainings", 100);
             int numLabels = config.Int("num_labels", 20);
-            int numSeedPositions = config.Int("num_seed_positions", 20);
+            int numSeedPositions = config.Int("num_seed_positions", 1000);
 
             Bitmap bm = LoadImage(path);
             if (saveAsGrayScale)
