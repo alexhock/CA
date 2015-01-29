@@ -1,0 +1,3 @@
+﻿base_path=C:\Users\AlexH\OneDrive\Data\CA\
+input_folder=C:\Users\AlexH\OneDrive\Data\CA\
+image_file=test_image.png

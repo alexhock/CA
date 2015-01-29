@@ -15,6 +15,14 @@ namespace CAImageSegmentation
 
         public Config(String path) { this.path = path; }
 
+        public int Int(String key, int def)
+        {
+            if (!ValidateKey(key))
+                return def;
+            else
+                return Int(key);
+        }
+
         public int Int(String key)
         {
             if (!ValidateKey(key))
@@ -31,6 +39,14 @@ namespace CAImageSegmentation
             }
         }
 
+        public float Float(String key, float def)
+        {
+            if (!ValidateKey(key))
+                return def;
+            else
+                return Float(key);
+        }
+
         public float Float(String key)
         {
             if (!ValidateKey(key))
@@ -45,6 +61,14 @@ namespace CAImageSegmentation
                 Console.WriteLine("Could not parse float value: {0}, {1}", key, this[key]);
                 throw ex;
             }
+        }
+
+        public double Double(String key, double def)
+        {
+            if (!ValidateKey(key))
+                return def;
+            else
+                return Double(key);
         }
 
         public double Double(String key)
@@ -69,6 +93,14 @@ namespace CAImageSegmentation
                 return null;
 
             return this[key];
+        }
+
+        public bool Bool(String key, bool def)
+        {
+            if (!ValidateKey(key))
+                return def;
+            else
+                return Bool(key);
         }
 
         public bool Bool(String key)
