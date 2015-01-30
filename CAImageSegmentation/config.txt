@@ -1,4 +1,4 @@
 ﻿base_path=C:\Users\AlexH\OneDrive\Data\CA\
 input_folder=C:\Users\AlexH\OneDrive\Data\CA\
 image_file=test_image.png
-a=test_image.png  DSCF0012.JPG
+a=test_image.png  DSCF0012.JPG DSCF0012.JPG

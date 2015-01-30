@@ -38,7 +38,7 @@ namespace CAImageSegmentation
 
             float g = 1 - (x / max_intensity);
 
-            return g * strength_q;
+            return g*strength_q;
         }
 
 
@@ -50,6 +50,8 @@ namespace CAImageSegmentation
 
         public void ProcessCell(Data data, List<int> labels, Position p, CellState p_state)
         {
+
+
             List<Position> neighbours = data.GetNeighbours(p);
             foreach (Position q in neighbours)
             {
@@ -61,13 +63,23 @@ namespace CAImageSegmentation
                     float stateTransition = GetStateTransition(p_state, q_state);
                     if (stateTransition > Threshold)
                     {
-                        //if (stateTransition < 1)
-                        //    Console.Write("hi");
-
                         // neighbour q wins so update central point p
 
                         //int new_labelidx_p = q_state.LabelIdx;
                         float new_strength_p = stateTransition;
+
+                        int x = p.Pos[0];
+                        int y = p.Pos[1];
+                        if (x >= 94 && x <= 352 && y >= 26 && y <= 140 && q_state.Intensity > 0.0)
+                        {
+                            Console.Write("hi");
+                        }
+
+                        if (p_state.Intensity > 0.0 && q_state.Intensity == 0.0)
+                        {
+                            Console.WriteLine("yi");
+                        }
+
 
                         if (p_state.LabelIdx != 0)
                         {
@@ -83,7 +95,6 @@ namespace CAImageSegmentation
                         // set new state for p
                         p_state.Strength = new_strength_p;
                         p_state.LabelIdx = q_state.LabelIdx;
-                        //SetState(p, p_state);
 
                         numStateTransitions++;
                     }

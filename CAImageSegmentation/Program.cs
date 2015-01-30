@@ -18,13 +18,13 @@ namespace CAImageSegmentation
             String path = inputFolder + config.Get("image_file");
             String outPath = inputFolder + "output_file.png";
             bool saveAsGrayScale = config.Bool("save_input_as_grayscale", false);
-            float threshold = config.Float("threshold", 0.8f);
+            float threshold = config.Float("threshold", 0.99f);
             int numTrainings = config.Int("num_trainings", 100);
             int numLabels = config.Int("num_labels", 20);
-            int numSeedPositions = config.Int("num_seed_positions", 1000);
+            int numSeedPositions = config.Int("num_seed_positions", 100);
 
             Bitmap bm = LoadImage(path);
-            if (saveAsGrayScale)
+            if (true)
             {
                 Bitmap mp = ConvertToGrayScale(bm);
                 SaveImage(mp, outPath + "input_as_grayscale.png");
@@ -36,6 +36,9 @@ namespace CAImageSegmentation
             float maxIntensity = cellData.GetMaxIntensity();
             CA ca = new CA(maxIntensity, threshold);
 
+            DebugSeedPositions(cellData, labels);
+            DebugLabels(labels);
+
             for (int i=0; i<numTrainings;i++)
             {
                 IterateCells(ca, cellData, labels, threshold);
@@ -46,8 +49,33 @@ namespace CAImageSegmentation
                 ca.NumStateTransitions = 0;               
             }
 
+            DebugSeedPositions(cellData, labels);
+            DebugLabels(labels);
             SaveOutputImage(cellData, labels, outPath);
+        }
 
+        public static void DebugLabels(List<int> labels)
+        {
+            int i=0;
+            foreach (int label in labels)
+            {
+                Console.WriteLine("Label: {0}  LabelVal: {1}", i++, label);
+            }
+        }
+        public static void DebugSeedPositions(Data cellData, List<int> labels)
+        {
+            foreach (Position pos in cellData.SeedPositions)
+            {
+                int x = pos.Pos[0];
+                int y = pos.Pos[1];
+
+                if (x >= 94 && x <= 352 &&
+                    y >= 26 && y <= 140)
+                {
+                    CellState cs = cellData.GetCellState(pos);
+                    Console.WriteLine("Label: {0}  LabelVal: {3} Strength: {1}  Intensity: {2}", cs.LabelIdx, cs.Strength, cs.Intensity, labels[cs.LabelIdx]);
+                }                                
+            }
         }
 
         public static Data IterateCells(CA ca, Data cellData, List<int> labels, float threshold)

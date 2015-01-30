@@ -12,6 +12,7 @@ namespace CAImageSegmentation
         int neighbourRadius = 1;
         List<float[]> data = null;
         CellState[][] states;
+        Position[] seedPositions;
 
         int width = 0;
         int height = 0;
@@ -24,6 +25,11 @@ namespace CAImageSegmentation
         public CellState[][] CellStates
         {
             get { return states; }
+        }
+
+        public Position[] SeedPositions
+        {
+            get { return seedPositions; }
         }
 
         public Data(List<float[]> data, int radius = 1)
@@ -82,18 +88,47 @@ namespace CAImageSegmentation
                 labels.Add(i);
             }
 
+            seedPositions = new Position[numSeeds];
+
             Random r = new Random();
             for (int i = 0; i < numSeeds; i++)
             {
-                int labelIdx = r.Next(0, numLabels); //for ints
+                int labelIdx = r.Next(1, numLabels); //for ints
                 int x = r.Next(0, width);
                 int y = r.Next(0, height);
                 float intensity = data[y][x];
 
+                for(int j=0;j<numSeeds;j++)
+                {
+                    Position t = seedPositions[j];
+                    if (t == null)
+                    {
+                        labelIdx = r.Next(1, numLabels);
+                        break;
+                    }
+                    else
+                    {
+                        CellState s2 = GetCellState(t);
+                        if (s2.Intensity == intensity)
+                        {
+                            labelIdx = s2.LabelIdx;
+                            break;
+                        }
+                    }
+                }
+                /*
+                if (x >= 94 && x <= 352 &&
+                    y >= 26 && y <= 140)
+                {
+                    Console.WriteLine("Hi");
+                }
+                 */
                 CellState s = new CellState(labelIdx, 1, intensity);
                 states[y][x] = s;
-            }
 
+                Position p = new Position(new int[] { x, y });
+                seedPositions[i] = p;
+            }
 
             return labels;
         }
@@ -113,9 +148,16 @@ namespace CAImageSegmentation
             }
             return maxIntensity;
         }
+        /*
+        List<Position> VonNeumannFourConnect(List<float[]> data, Position p, int radius = 1)
+        {
 
+
+        }
+        */
         List<Position> NeighbourhoodFunc(List<float[]> data, Position p, int radius = 1)
         {
+            // moore 8 connect
             var positions = new List<Position>();
 
             int height = data.Count;
